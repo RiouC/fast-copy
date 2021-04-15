@@ -61,7 +61,6 @@ const fastCopy = async (sources, destination) => {
 		    const srcPath = path.join(dirPath, '/', src, file);
 		    const destPath = path.join(dirPath, '/', destination, file);
 		    proArray.push(fsPromises.copyFile(srcPath , destPath));
-		    // await fsPromises.copyFile(path.normalize(path.join(src, '/', file)), destination);
 		}
 		const results = await Promise.allSettled(proArray);
 
