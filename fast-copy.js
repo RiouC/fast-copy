@@ -21,7 +21,7 @@ const checkArgsLen = (cmdArgs) => {
 const checkSources = (sources) => {
     for (let src of sources) {
 	if (!fs.existsSync(src)) {
-	    console.error(`${bn}: cannot access ${src}: No such file or directory`);
+	    console.error(`checkSources : ${bn}: cannot access ${src}: No such file or directory`);
 	    process.exit(1);
 	}
     }
@@ -37,7 +37,7 @@ const checkDest = async (destination) => {
 	    console.log('in e.code === ENOENT')
 	    fsPromises.mkdir(destination);
 	} else {
-	    console.error(e.message)
+	    console.error(`checkDest : ${e.message}`)
 	    process.exit(1);
 	}
     }
@@ -58,12 +58,17 @@ const fastCopy = async (sources, destination) => {
 		const proArray = [];
 		for (const file of files) {
 		    console.log(file);
-		    console.log(src + '/' + file)
-		    proArray.push(fsPromises.copyFile(src + file, destination))
+		    const dirPath = path.dirname(__filename);
+		    console.log('src / file : ' + src + '/' + file)
+		    console.log('path.join : ' + path.join(dirPath, '/', src, file))
+		    proArray.push(fsPromises.copyFile(path.join(dirPath, '/', src, file) , path.join(dirPath, '/', destination, file)))
 		    // await fsPromises.copyFile(path.normalize(path.join(src, '/', file)), destination);
 		}
-		const results = await Promise.allSettled(proArray);
-		console.log(results.status)
+		const results = await Promise.all(proArray);
+		// for (res of results) {
+		    // console.log(`status : ${results.status}`)
+		    // console.log(`value : ${results.value}`)
+		// }
 	    } catch (err) {
 		console.error(err);
 	    }
