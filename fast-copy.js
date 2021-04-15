@@ -64,6 +64,10 @@ const fastCopy = async (sources, destination) => {
 		}
 		const results = await Promise.allSettled(proArray);
 
+		for (res of results) {
+		    console.log(`status : ${res.status}`)
+		    console.log(`value : ${res.value}`)
+		}
 		// const settledArr = Promise.allSettled(proArray);
 		// for (p of settledArr) {
 		//     console.log(`status : ${p.status}`)
