@@ -34,7 +34,7 @@ const checkDest = async (destination) => {
 	    throw new Error(`${bn}: target '${destination}' is not a directory`);
     } catch (e) {
 	if (e.code === 'ENOENT') {
-	    console.log('in e.code === ENOENT')
+	    // console.log('in e.code === ENOENT')
 	    fsPromises.mkdir(destination);
 	} else {
 	    console.error(`checkDest : ${e.message}`)
@@ -57,18 +57,20 @@ const fastCopy = async (sources, destination) => {
 		console.log(`files : ${files}`);
 		const proArray = [];
 		for (const file of files) {
-		    console.log(file);
 		    const dirPath = path.dirname(__filename);
-		    console.log('src / file : ' + src + '/' + file)
-		    console.log('path.join : ' + path.join(dirPath, '/', src, file))
-		    proArray.push(fsPromises.copyFile(path.join(dirPath, '/', src, file) , path.join(dirPath, '/', destination, file)))
+		    const srcPath = path.join(dirPath, '/', src, file);
+		    const destPath = path.join(dirPath, '/', destination, file);
+		    proArray.push(fsPromises.copyFile(srcPath , destPath));
 		    // await fsPromises.copyFile(path.normalize(path.join(src, '/', file)), destination);
 		}
-		const results = await Promise.all(proArray);
-		// for (res of results) {
-		    // console.log(`status : ${results.status}`)
-		    // console.log(`value : ${results.value}`)
+		const results = await Promise.allSettled(proArray);
+
+		// const settledArr = Promise.allSettled(proArray);
+		// for (p of settledArr) {
+		//     console.log(`status : ${p.status}`)
+		//     console.log(`value : ${p.value}`)
 		// }
+		// const results = await settledArr;
 	    } catch (err) {
 		console.error(err);
 	    }
